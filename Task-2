@@ -1,0 +1,139 @@
+/*
+The **StudentGradesManager** program is a simple Java application to track and manage student grades. It allows users to add grades for various subjects, calculate the average grade, determine the corresponding letter grade, and display all stored grades with a summary.
+
+ **Key Features:**
+1. **Add Grades:**
+   - Users can input a subject name and its corresponding grade (0-100).
+   - Grades are stored in a list of `Subject` objects, where each object contains the subject name and grade.
+
+2. **Calculate Average:**
+   - Computes the average grade from all recorded subjects.
+   - Returns 0 if no grades are recorded.
+
+3. **Determine Letter Grade:**
+   - Converts the numerical average to a letter grade based on standard grading scales:
+     - A: 90-100
+     - B: 80-89
+     - C: 70-79
+     - D: 60-69
+     - F: Below 60
+
+4. **Display Grades and Summary:**
+   - Lists all recorded grades with their respective subjects.
+   - Displays the overall average grade and its letter equivalent.
+
+**How It Works:**
+- The program uses a `Scanner` for user input and a `while` loop for a menu-driven interface. Users can:
+  1. Add grades.
+  2. View all grades and the summary.
+  3. Exit the program.
+- A `switch` statement handles menu options.
+- Validation ensures proper program flow and handles invalid choices gracefully.
+
+**Usage Example:**
+1. Add grades for "Math" (85) and "Science" (92).
+2. View grades: Displays both grades, calculates the average (88.5), and assigns the letter grade "B".
+
+*/
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class StudentGradesManager {
+
+    // Nested class to store individual subjects and grades
+    static class Subject {
+        String name;
+        double grade;
+
+        Subject(String name, double grade) {
+            this.name = name;
+            this.grade = grade;
+        }
+    }
+
+    // List to store subjects and their grades
+    private List<Subject> subjects = new ArrayList<>();
+
+    // Add a grade for a subject
+    public void addGrade(String subjectName, double grade) {
+        subjects.add(new Subject(subjectName, grade));
+    }
+
+    // Calculate the average grade
+    public double calculateAverage() {
+        if (subjects.isEmpty()) return 0.0;
+
+        double sum = 0;
+        for (Subject subject : subjects) {
+            sum += subject.grade;
+        }
+        return sum / subjects.size();
+    }
+
+    // Get letter grade from numerical average
+    public String getLetterGrade(double average) {
+        if (average >= 90) return "A";
+        else if (average >= 80) return "B";
+        else if (average >= 70) return "C";
+        else if (average >= 60) return "D";
+        else return "F";
+    }
+
+    // Display all grades and details
+    public void displayGrades() {
+        if (subjects.isEmpty()) {
+            System.out.println("No grades recorded.");
+            return;
+        }
+
+        System.out.println("--- Student Grades ---");
+        for (Subject subject : subjects) {
+            System.out.printf("Subject: %s | Grade: %.2f\n", subject.name, subject.grade);
+        }
+
+        double average = calculateAverage();
+        System.out.printf("\nAverage Grade: %.2f\n", average);
+        System.out.println("Overall Letter Grade: " + getLetterGrade(average));
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        StudentGradesManager manager = new StudentGradesManager();
+
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Add a grade");
+            System.out.println("2. Display all grades and summary");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter subject name: ");
+                    String subjectName = scanner.nextLine();
+                    System.out.print("Enter grade (0-100): ");
+                    double grade = scanner.nextDouble();
+                    manager.addGrade(subjectName, grade);
+                    System.out.println("Grade added successfully.");
+                    break;
+
+                case 2:
+                    manager.displayGrades();
+                    break;
+
+                case 3:
+                    System.out.println("Exiting the program. Goodbye!");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
